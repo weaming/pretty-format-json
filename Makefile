@@ -16,7 +16,7 @@ install: clean build
 	$(pip) install --force-reinstall ./dist/*.whl
 
 publish: clean build
-	twine upload dist/*
+	twine upload dist/* && git push
 
 uninstall:
 	$(pip) uninstall $(name)
