@@ -34,10 +34,14 @@ def pretty_print(data):
     print(json.dumps(data, indent=4, ensure_ascii=False))
 
 
-if __name__ == "__main__":
+def main():
     fp = None
     if len(sys.argv) > 1:
         fp = sys.argv[1]
 
     text = get_text(fp)
     pretty_print(parse_text(text))
+
+
+if __name__ == "__main__":
+    main()
