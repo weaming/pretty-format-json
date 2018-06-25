@@ -6,6 +6,7 @@ Created Time : 2018-06-25 17:07:30
 
 Pretty print json contains python style coments, string literal.
 """
+import os
 import sys
 import json
 import ast
@@ -31,7 +32,8 @@ def parse_text(text):
 
 
 def pretty_print(data):
-    print(json.dumps(data, indent=4, ensure_ascii=False))
+    indent = int(os.getenv('JSON_INDENT', 2))
+    print(json.dumps(data, indent=indent, ensure_ascii=False))
 
 
 def main():
