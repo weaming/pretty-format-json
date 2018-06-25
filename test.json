@@ -1,0 +1,8 @@
+{
+  "title": "master account opening information",
+  "type": "object",
+  # comment
+  'required': ["is_trusted_contact_provided", "given_name", "family_name", "phone_number"], # comment
+  # tail comma
+  "additionalProperties": false,
+}
