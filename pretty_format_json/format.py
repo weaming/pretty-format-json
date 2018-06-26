@@ -10,6 +10,7 @@ import os
 import sys
 import json
 import ast
+from collections import OrderedDict
 
 
 def get_text(fp):
@@ -33,7 +34,24 @@ def parse_text(text):
 
 def pretty_print(data):
     indent = int(os.getenv('JSON_INDENT', 2))
+    data = to_ordered_dict(data)
     print(json.dumps(data, indent=indent, ensure_ascii=False))
+
+
+def asign(a, b):
+    for k in sorted(a.keys()):
+        v = a[k]
+        if isinstance(v, dict):
+            b[k] = to_ordered_dict(v)
+        else:
+            b[k] = v
+
+
+def to_ordered_dict(data):
+    rv = OrderedDict()
+
+    asign(data, rv)
+    return rv
 
 
 def main():
