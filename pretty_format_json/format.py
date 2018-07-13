@@ -42,12 +42,18 @@ def asign(a, b):
     for k in sorted(a.keys()):
         v = a[k]
         if isinstance(v, dict):
-            b[k] = to_ordered_dict(v)
-        else:
-            b[k] = v
+            v = to_ordered_dict(v)
+        elif isinstance(v, list):
+            v = list(map(to_ordered_dict, v))
+
+        b[k] = v
 
 
 def to_ordered_dict(data):
+    # ignore non dict data
+    if not isinstance(data, dict):
+        return data
+
     rv = OrderedDict()
 
     asign(data, rv)

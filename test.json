@@ -1,8 +1,20 @@
 {
-  "title": "master account opening information",
+  "title": "just title",
   "type": "object",
   # comment
   'required': ["is_trusted_contact_provided", "given_name", "family_name", "phone_number"], # comment
+  'dict_in_list': [
+      {
+          "name": 'Alice',
+          "age": 18,
+      },
+      {
+          "age": 19,
+          "name": 'Bob',
+      },
+      # non dict in list
+      333,
+  ],
   # tail comma
   "additionalProperties": false,
 }
