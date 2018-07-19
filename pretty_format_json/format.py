@@ -12,6 +12,11 @@ import json
 import ast
 from collections import OrderedDict
 
+try:
+    from commands import getstatusoutput as get_status_output
+except ImportError:
+    from subprocess import getstatusoutput as get_status_output
+
 
 def get_text(fp):
     if fp:
@@ -30,6 +35,14 @@ def parse_text(text):
 
     py_obj = ast.literal_eval(text)
     return py_obj
+
+
+def eval_node(text):
+    eval_text = "node -e 'console.log(JSON.stringify({}))'".format(text)
+    code, output = get_status_output(eval_text)
+    if code == 0:
+        return output
+    return text
 
 
 def pretty_print(data):
@@ -66,6 +79,7 @@ def main():
         fp = sys.argv[1]
 
     text = get_text(fp)
+    text = eval_node(text)
     pretty_print(parse_text(text))
 
 
