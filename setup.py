@@ -17,7 +17,7 @@ gh_repo = 'https://github.com/weaming/pretty-format-json'
 setup(
     name='pretty-format-json',  # Required
 
-    version='0.1.7',  # Required
+    version='0.2.0',  # Required
 
     # This is a one-line description or tagline of what your project does.
     description='Pretty print json contains python style coments, string literal.',  # Required
@@ -71,6 +71,7 @@ setup(
     entry_points={  # Optional
         'console_scripts': [
             'pretty_format_json=pretty_format_json.format:main',
+            'yaml_json=pretty_format_json.yaml_json:main',
         ],
     },
 
