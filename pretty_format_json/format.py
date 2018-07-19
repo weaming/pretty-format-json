@@ -17,6 +17,8 @@ try:
 except ImportError:
     from subprocess import getstatusoutput as get_status_output
 
+DEBUG = os.getenv('DEBUG')
+
 
 def get_text(fp):
     if fp:
@@ -29,7 +31,8 @@ def parse_text(text):
     text = '\n'.join(x.strip() for x in text.split('\n'))
     text = text.replace('true', 'True').replace('false', 'False').replace(
         'null', 'None').replace('nil', 'None')
-    # print(text)
+    if DEBUG:
+        print(text)
     if not text:
         return None
 
@@ -38,10 +41,22 @@ def parse_text(text):
 
 
 def eval_node(text):
-    eval_text = "node -e 'console.log(JSON.stringify({}))'".format(text)
+    if "'" in text:
+        eval_text = 'node -e "console.log(JSON.stringify({}))"'.format(text)
+    else:
+        eval_text = "node -e 'console.log(JSON.stringify({}))'".format(text)
+
+    if DEBUG:
+        print("NODE: shell command")
+        print(eval_text)
+
     code, output = get_status_output(eval_text)
+    if DEBUG:
+        print(code)
+        print(output)
     if code == 0:
         return output
+
     return text
 
 
