@@ -5,7 +5,6 @@ Author       : weaming
 Created Time : 2018-07-19 03:24:06
 Prerequisites:
     pip3 install pyyaml
-    pip3 install pretty-format-json
 
 Yaml and JSON converter
 """
