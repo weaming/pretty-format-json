@@ -18,6 +18,7 @@ Add `noremap <a-j> :%!pretty_format_json<CR>` (or your key binding) to your conf
 ```
 noremap <a-j> :%!pretty_format_json<CR>
 noremap <a-k> :%!yaml_json<CR>
+noremap <a-c> :%!csv_json<CR>
 ```
 
 When you open a blank buffer, paste the text copied from somewhere into,
