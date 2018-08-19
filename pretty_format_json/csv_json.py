@@ -19,8 +19,15 @@ except ImportError:
 from .format import pretty_print
 from data_process.io_csv import process_row_generator, new_csv_reader
 
+is_py2 = sys.version_info[0] == 2
+
 
 def to_csv(data):
+    if is_py2:
+        fuck = lambda x: x.encode("utf8")
+    else:
+        fuck = lambda x: x
+    data = [{fuck(k): fuck(v) for k, v in row.items()} for row in data]
     f = StringIO()
     fields = list(data[0])
     process_row_generator(fields, iter(data), f, keep_open=True)
