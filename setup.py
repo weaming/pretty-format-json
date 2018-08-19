@@ -17,10 +17,12 @@ gh_repo = 'https://github.com/weaming/pretty-format-json'
 setup(
     name='pretty-format-json',  # Required
 
-    version='0.2.2',  # Required
+    version='0.2.3',  # Required
 
     # This is a one-line description or tagline of what your project does.
     description='Pretty print json contains python style coments, string literal.',  # Required
+    long_description=long_description,  # Optional
+    long_description_content_type='text/markdown',  # Optional (see note above)
 
     url=gh_repo,  # Optional
     author='weaming',  # Optional
