@@ -21,7 +21,8 @@ publish: clean build
 	twine upload dist/* && git push --follow-tags
 
 uninstall:
-	$(pip) uninstall $(name)
+	pip uninstall $(name) -y
+	pip3 uninstall $(name) -y
 
 clean:
 	rm -fr build dist *.egg-info
