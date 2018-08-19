@@ -3,8 +3,9 @@
 # the library name
 name = pretty-format-json
 # may change to pip3 or python3 -m pip, etc.
-# python2 do not support write csv in unicode
-pip = pip
+
+# it's not easy writting csv/yaml in unicode in python2
+pip = pip3
 
 test:
 	cat test.json | python pretty/format.py
