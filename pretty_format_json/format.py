@@ -50,7 +50,14 @@ def eval_node(text):
         print("NODE: shell command")
         print(eval_text)
 
-    code, output = get_status_output(eval_text)
+    try:
+        code, output = get_status_output(eval_text)
+    except:
+        if DEBUG:
+            raise
+        else:
+            return text
+
     if DEBUG:
         print(code)
         print(output)
