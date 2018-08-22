@@ -6,7 +6,7 @@ Pretty print json contains python style coments, string literal.
 pip3 install pretty-format-json
 ```
 
-Yaml and CSV write works fine in Python but not in Python2
+Yaml and CSV write works fine in Python3 but not in Python2
 
 ## Binaries
 
