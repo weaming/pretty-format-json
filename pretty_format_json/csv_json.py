@@ -29,7 +29,7 @@ def to_csv(data):
         fuck = lambda x: x
     data = [{fuck(k): fuck(v) for k, v in row.items()} for row in data]
     f = StringIO()
-    fields = list(data[0])
+    fields = sorted(data[0])
     process_row_generator(fields, iter(data), f, keep_open=True)
     return f.getvalue()
 
