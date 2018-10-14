@@ -18,7 +18,7 @@ except ImportError:
     from io import StringIO
 
 from .format import pretty_print
-from data_process.io_csv import process_row_generator, new_csv_reader
+from data_process.io_csv import process_row_generator, read_csv
 
 is_py2 = sys.version_info[0] == 2
 
@@ -30,14 +30,13 @@ def to_csv(data):
         fuck = lambda x: x
     data = [{fuck(k): fuck(v) for k, v in row.items()} for row in data]
     f = StringIO()
-    fields = sorted(data[0])
+    fields = sorted(data[0]) if is_py2 else list(data[0])
     process_row_generator(fields, iter(data), f, keep_open=True)
     return f.getvalue()
 
 
 def from_csv(text):
-    with new_csv_reader(StringIO(text)) as csv:
-        return list(csv)
+    return read_csv(StringIO(text))
 
 
 def get_target_type_from_text(text):
