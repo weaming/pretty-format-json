@@ -10,6 +10,7 @@ import sys
 import argparse
 import json
 import io
+from . import *
 
 try:
     from StringIO import StringIO
@@ -50,8 +51,15 @@ def main():
     parser.add_argument(
         "-t", "--type", help="type of target output, csv and json are allowed"
     )
+    parser.add_argument(
+        "-v", "--version", default=False, action="store_true", help="print version"
+    )
 
     args = parser.parse_args()
+    if args.version:
+        print(version)
+        sys.exit(0)
+
     text = sys.stdin.read()
 
     t = args.type or get_target_type_from_text(text)

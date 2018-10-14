@@ -11,42 +11,44 @@ Yaml and JSON converter
 import sys
 import argparse
 import json
+from . import *
 
-from yaml import load, dump
-try:
-    from yaml import CLoader as Loader, CDumper as Dumper
-except ImportError:
-    from yaml import Loader, Dumper
+import oyaml as yaml
 from .format import pretty_print
 
 
 def to_yaml(data):
-    return dump(
-        data, Dumper=Dumper, default_flow_style=False, allow_unicode=True)
+    return yaml.safe_dump(data, default_flow_style=False, allow_unicode=True)
 
 
 def from_yaml(stream):
-    return load(stream, Loader=Loader)
+    return yaml.safe_load(stream)
 
 
 def get_target_type_from_text(text):
-    if text.strip()[0] in '{[':
-        return 'yaml'
-    return 'json'
+    if text.strip()[0] in "{[":
+        return "yaml"
+    return "json"
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '-t',
-        '--type',
-        help="type of target output, yaml and json are allowed")
+        "-t", "--type", help="type of target output, yaml and json are allowed"
+    )
+    parser.add_argument(
+        "-v", "--version", default=False, action="store_true", help="print version"
+    )
 
     args = parser.parse_args()
+    if args.version:
+        print(version)
+        sys.exit(0)
+
     text = sys.stdin.read()
 
     t = args.type or get_target_type_from_text(text)
-    if t == 'yaml':
+    if t == "yaml":
         try:
             data = json.loads(text)
         except ValueError as e:
@@ -56,9 +58,9 @@ def main():
         y = to_yaml(data)
         print(y)
 
-    elif t == 'json':
+    elif t == "json":
         pretty_print(from_yaml(text))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
