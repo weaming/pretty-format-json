@@ -26,7 +26,8 @@ def from_yaml(stream):
 
 
 def get_target_type_from_text(text):
-    if text.strip()[0] in "{[":
+    text = text.strip()
+    if text and text[0] in "{[":
         return "yaml"
     return "json"
 
