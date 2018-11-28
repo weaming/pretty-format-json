@@ -17,7 +17,8 @@ try:
 except ImportError:
     from subprocess import getstatusoutput as get_status_output
 
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv("DEBUG")
+FORCE_SORT = os.getenv("FORCE_SORT")
 
 
 def get_text(fp):
@@ -28,9 +29,13 @@ def get_text(fp):
 
 
 def parse_text(text):
-    text = '\n'.join(x.strip() for x in text.split('\n'))
-    text = text.replace('true', 'True').replace('false', 'False').replace(
-        'null', 'None').replace('nil', 'None')
+    text = "\n".join(x.strip() for x in text.split("\n"))
+    text = (
+        text.replace("true", "True")
+        .replace("false", "False")
+        .replace("null", "None")
+        .replace("nil", "None")
+    )
     if DEBUG:
         print(text)
     if not text:
@@ -40,7 +45,7 @@ def parse_text(text):
     return py_obj
 
 
-def eval_node(text):
+def eval_in_nodejs(text):
     if "'" in text:
         eval_text = 'node -e "console.log(JSON.stringify({}))"'.format(text)
     else:
@@ -68,7 +73,7 @@ def eval_node(text):
 
 
 def pretty_print(data):
-    indent = int(os.getenv('JSON_INDENT', 2))
+    indent = int(os.getenv("JSON_INDENT", 2))
     data = to_ordered_dict(data)
     print(json.dumps(data, indent=indent, ensure_ascii=False))
 
@@ -85,12 +90,21 @@ def asign(a, b):
 
 
 def to_ordered_dict(data):
-    # ignore non dict data
+    # parse list
+    if isinstance(data, (tuple, list)):
+        return list(map(to_ordered_dict, data))
+
+    # do not process other types
     if not isinstance(data, dict):
         return data
 
-    rv = OrderedDict()
+    # ordered already
+    if isinstance(data, OrderedDict):
+        if not FORCE_SORT:
+            return data
 
+    # sort dict
+    rv = OrderedDict()
     asign(data, rv)
     return rv
 
@@ -101,7 +115,7 @@ def main():
         fp = sys.argv[1]
 
     text = get_text(fp)
-    text = eval_node(text)
+    text = eval_in_nodejs(text)
     pretty_print(parse_text(text))
 
 
