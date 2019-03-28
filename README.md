@@ -11,6 +11,7 @@ Yaml and CSV write works fine in Python3 but not in Python2
 ## Binaries
 
 * `pretty_format_json`: parse NodeJS style, Python style text to JSON
+* `csv_json`: Convert between CSV and JSON
 * `yaml_json`: Convert between Yaml and JSON
 
 ## Use it in VIM
