@@ -10,6 +10,7 @@ import os
 import sys
 import json
 import ast
+import re
 from collections import OrderedDict
 
 try:
@@ -31,10 +32,9 @@ def get_text(fp):
 def parse_text(text):
     text = "\n".join(x.strip() for x in text.split("\n"))
     text = (
-        text.replace("true", "True")
-        .replace("false", "False")
-        .replace("null", "None")
-        .replace("nil", "None")
+        text.replace("true", "True").replace("false", "False").replace(
+            "null", "None"
+        ).replace("nil", "None")
     )
     if DEBUG:
         print(text)
@@ -115,7 +115,10 @@ def main():
         fp = sys.argv[1]
 
     text = get_text(fp)
-    text = eval_in_nodejs(text)
+    if re.search(r'\)\s*,', text):
+        text = json.dumps(ast.literal_eval(text), ensure_ascii=False)
+    else:
+        text = eval_in_nodejs(text)
     pretty_print(parse_text(text))
 
 
