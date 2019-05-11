@@ -11,6 +11,7 @@ import sys
 import json
 import ast
 import re
+import datetime
 from collections import OrderedDict
 
 try:
@@ -73,9 +74,26 @@ def eval_in_nodejs(text):
 
 
 def pretty_print(data):
+    def json_serializer(obj):
+        if isinstance(obj, (datetime.datetime, datetime.date)):
+            if isinstance(obj, datetime.date):
+                fmt = os.getenv("DATE_FORMAT")
+                if fmt:
+                    return obj.strftime(fmt)
+            if isinstance(obj, datetime.datetime):
+                fmt = os.getenv("DATETIME_FORMAT")
+                if fmt:
+                    return obj.strftime(fmt)
+            return obj.isoformat()
+        raise TypeError("Type %s not serializable" % type(obj))
+
     indent = int(os.getenv("JSON_INDENT", 2))
     data = to_ordered_dict(data)
-    print(json.dumps(data, indent=indent, ensure_ascii=False))
+    print(
+        json.dumps(
+            data, indent=indent, ensure_ascii=False, default=json_serializer
+        )
+    )
 
 
 def asign(a, b):
