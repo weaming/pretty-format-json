@@ -134,6 +134,7 @@ def main():
 
     text = get_text(fp)
     if re.search(r'\)\s*,', text):
+        text = text.replace('false', 'False').replace('true', 'True')
         text = json.dumps(ast.literal_eval(text), ensure_ascii=False)
     else:
         text = eval_in_nodejs(text)
