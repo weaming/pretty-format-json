@@ -88,7 +88,8 @@ def pretty_print(data):
         raise TypeError("Type %s not serializable" % type(obj))
 
     indent = int(os.getenv("JSON_INDENT", 2))
-    data = to_ordered_dict(data)
+    if os.getenv("JSON_SORT_KEYS"):
+        data = to_ordered_dict(data)
     print(
         json.dumps(
             data, indent=indent, ensure_ascii=False, default=json_serializer
