@@ -40,25 +40,40 @@ def filter_keys(data, fields, raise_missing=True, raise_extra=True):
             yield xx
 
 
-def to_csv(data, fields=None, ignore_missing=False, ignore_extra=False):
+def _merge_value(v):
+    if isinstance(v, list):
+        return ', '.join(str(x) for x in v)
+    if not isinstance(v, (int, float)):
+        return str(v)
+    return v
+
+
+def to_csv(data, fields=None, ignore_missing=False, ignore_extra=False, loose=False):
     if is_py2:
         fuck = lambda x: x.encode("utf8")
     else:
         fuck = lambda x: x
-    data = [{fuck(k): fuck(v) for k, v in row.items()} for row in data]
+    data = [{fuck(k): _merge_value(fuck(v)) for k, v in row.items()} for row in data]
     f = StringIO()
     if not fields:
-        fields = sorted(data[0]) if is_py2 else list(data[0])
+        if loose:
+            fields = set()
+            for r in data:
+                for k in r:
+                    fields.add(k)
+            fields = sorted(fields)
+        else:
+            fields = sorted(data[0]) if is_py2 else list(data[0])
     process_row_generator(
         fields,
         filter_keys(
             data,
             fields,
-            raise_missing=not ignore_missing,
-            raise_extra=not ignore_extra
+            raise_missing=(not ignore_missing) and (not loose),
+            raise_extra=not ignore_extra,
         ),
         f,
-        keep_open=True
+        keep_open=True,
     )
     return f.getvalue()
 
@@ -80,26 +95,23 @@ def main():
         "-t", "--type", help="type of target output, csv and json are allowed"
     )
     parser.add_argument(
-        "-v",
-        "--version",
-        default=False,
-        action="store_true",
-        help="print version"
+        "-v", "--version", default=False, action="store_true", help="print version"
     )
     parser.add_argument("-f", "--fields", nargs='*', help="specific the fields")
+    parser.add_argument("--loose", action='store_true', help="output all fields")
     parser.add_argument(
         "-m",
         "--ignore-missing",
         default=False,
         action="store_true",
-        help="ignore the missing fields"
+        help="ignore the missing fields",
     )
     parser.add_argument(
         "-e",
         "--ignore-extra",
         default=False,
         action="store_true",
-        help="ignore the extra fields"
+        help="ignore the extra fields",
     )
 
     args = parser.parse_args()
@@ -117,7 +129,9 @@ def main():
             print(e)
             sys.exit(1)
 
-        y = to_csv(data, args.fields, args.ignore_missing, args.ignore_extra)
+        y = to_csv(
+            data, args.fields, args.ignore_missing, args.ignore_extra, args.loose
+        )
         print(y)
 
     elif t == "json":

@@ -23,7 +23,7 @@ setup(
     keywords="json format",  # Optional
     install_requires=[
         "oyaml",
-        "data-process==0.3.*"
+        "data-process>=0.3.*"
     ],  # Optional
     entry_points={  # Optional
         "console_scripts": [
