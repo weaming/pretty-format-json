@@ -48,12 +48,26 @@ def _merge_value(v):
     return v
 
 
-def to_csv(data, fields=None, ignore_missing=False, ignore_extra=False, loose=False):
+def to_csv(
+    data,
+    fields=None,
+    ignore_missing=False,
+    ignore_extra=False,
+    loose=False,
+    sort_keys=False,
+):
     if is_py2:
         fuck = lambda x: x.encode("utf8")
     else:
         fuck = lambda x: x
-    data = [{fuck(k): _merge_value(fuck(v)) for k, v in row.items()} for row in data]
+    data = [
+        dict(
+            (sorted if sort_keys else lambda x: x)(
+                {fuck(k): _merge_value(fuck(v)) for k, v in row.items()}.items()
+            )
+        )
+        for row in data
+    ]
     f = StringIO()
     if not fields:
         if loose:
@@ -113,6 +127,9 @@ def main():
         action="store_true",
         help="ignore the extra fields",
     )
+    parser.add_argument(
+        "-s", "--sort-keys", default=False, action="store_true", help="sort keys",
+    )
 
     args = parser.parse_args()
     if args.version:
@@ -130,7 +147,12 @@ def main():
             sys.exit(1)
 
         y = to_csv(
-            data, args.fields, args.ignore_missing, args.ignore_extra, args.loose
+            data,
+            args.fields,
+            args.ignore_missing,
+            args.ignore_extra,
+            args.loose,
+            sort_keys=args.sort_keys,
         )
         print(y)
 
