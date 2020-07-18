@@ -12,6 +12,7 @@ import json
 import io
 from . import *
 
+
 try:
     from StringIO import StringIO
 except ImportError:
@@ -21,6 +22,19 @@ from .format import pretty_print
 from data_process.io_csv import process_row_generator, read_csv
 
 is_py2 = sys.version_info[0] == 2
+
+# https://stackoverflow.com/a/15063941/5281824
+import csv
+
+maxInt = sys.maxsize
+while True:
+    # decrease the maxInt value by factor 10
+    # as long as the OverflowError occurs.
+    try:
+        csv.field_size_limit(maxInt)
+        break
+    except OverflowError:
+        maxInt = int(maxInt / 10)
 
 
 def filter_keys(data, fields, raise_missing=True, raise_extra=True):
@@ -41,10 +55,12 @@ def filter_keys(data, fields, raise_missing=True, raise_extra=True):
 
 
 def _merge_value(v):
-    if isinstance(v, list):
-        return ', '.join(str(x) for x in v)
-    if not isinstance(v, (int, float)):
+    if isinstance(v, (list, tuple, dict)):
+        return json.dumps(v, ensure_ascii=False)
+    elif not isinstance(v, (int, float)):
         return str(v)
+    elif v is None:
+        return ''
     return v
 
 

@@ -1,4 +1,4 @@
-version = '0.2.20'
+version = '0.2.21'
 
 from signal import signal, SIGPIPE, SIG_DFL
 
