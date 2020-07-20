@@ -22,7 +22,8 @@ except ImportError:
 DEBUG = os.getenv("DEBUG")
 JSON_SORT_KEYS = os.getenv("JSON_SORT_KEYS")
 DATE_FORMAT = os.getenv("DATE_FORMAT")
-JSON_INDENT = int(os.getenv("JSON_INDENT", 2))
+JSON_INDENT = os.getenv("JSON_INDENT", '2')
+JSON_INDENT = int(JSON_INDENT) if JSON_INDENT else None
 
 
 def get_text(fp):
@@ -35,9 +36,10 @@ def get_text(fp):
 def parse_text(text):
     text = "\n".join(x.strip() for x in text.split("\n"))
     text = (
-        text.replace("true", "True").replace("false", "False").replace(
-            "null", "None"
-        ).replace("nil", "None")
+        text.replace("true", "True")
+        .replace("false", "False")
+        .replace("null", "None")
+        .replace("nil", "None")
     )
     if DEBUG:
         print(text)
